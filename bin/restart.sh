@@ -7,6 +7,6 @@ if pgrep -f "/collect-admin-api" > /dev/null; then
 fi
 
 # 启动接口服务
-nohup ./collect-admin-api --gf.gcfg.file="./collect-admin-api.yaml" > /dev/null 2>&1 &
+nohup ./collect-admin-api --gf.gcfg.file="collect-admin-api.yaml" > collect-admin-api.log 2>&1 &
 
 echo "重启完成"
