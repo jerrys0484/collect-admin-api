@@ -43,7 +43,8 @@ pipeline {
                                     // 传输完成后在远程执行的命令
                                     execCommand: '''
                                         # 执行重启服务
-                                        sh bin/restart.sh
+                                        cd collect/bin
+                                        sh restart.sh
                                         echo "部署完成于 $(date)"
                                     ''',
                                     // 可选：是否在传输前清空远程目录
