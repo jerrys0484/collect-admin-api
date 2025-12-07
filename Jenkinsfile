@@ -22,10 +22,11 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'echo "开始构建..."'
-                sh 'ls -la'
                 sh 'go env -w GOPROXY=https://goproxy.cn,direct'
                 sh 'go build -o bin/collect-admin-api main.go'
                 sh 'cp -rf resource bin/resource'
+                sh 'echo "构建完成"'
+                sh 'ls -la bin'
             }
         }
         stage('Deploy via SSH') {
@@ -36,7 +37,7 @@ pipeline {
                             configName: 'Developer', // 在系统设置中配置的名称
                             transfers: [
                                 sshTransfer(
-                                    sourceFiles: 'bin/*',
+                                    sourceFiles: 'bin/**',
                                     // 远程目录（相对于系统配置中的“Remote Directory”）
                                     remoteDirectory: 'collect',
                                     // 传输完成后在远程执行的命令
