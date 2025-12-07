@@ -15,6 +15,18 @@ pipeline {
                 sh 'go build -o collect-admin-api main.go'
             }
         }
+        stage('Load Config') {
+            steps {
+                configFileProvider(
+                    [configFile(fileId: 'collect-admin-api', targetLocation: 'collect-admin-api.yaml')]
+                ) {
+                    sh '''
+                        echo "配置文件已生成："
+                        cat collect-admin-api.yaml
+                    '''
+                }
+            }
+        }
         stage('Deploy via SSH') {
             steps {
                 sshPublisher(
@@ -23,7 +35,7 @@ pipeline {
                             configName: 'Developer', // 在系统设置中配置的名称
                             transfers: [
                                 sshTransfer(
-                                    sourceFiles: 'collect-admin-api',
+                                    sourceFiles: 'collect-admin-api,resource,collect-admin-api.yaml',
                                     // 远程目录（相对于系统配置中的“Remote Directory”）
                                     remoteDirectory: 'collect',
                                     // 传输完成后在远程执行的命令
