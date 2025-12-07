@@ -7,24 +7,24 @@ pipeline {
     tools { go 'go1.25.4' }
 
     stages {
-        stage('Build') {
-            steps {
-                sh 'echo "开始构建..."'
-                sh 'ls -la'
-                sh 'go env -w GOPROXY=https://goproxy.cn,direct'
-                sh 'go build -o collect-admin-api main.go'
-            }
-        }
         stage('Load Config') {
             steps {
                 configFileProvider(
-                    [configFile(fileId: 'collect-admin-api', targetLocation: 'collect-admin-api.yaml')]
+                    [configFile(fileId: 'a71f7ca2-1232-4c47-b7cf-4a9e1ab4bb4a', targetLocation: 'collect-admin-api.yaml')]
                 ) {
                     sh '''
                         echo "配置文件已生成："
                         cat collect-admin-api.yaml
                     '''
                 }
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'echo "开始构建..."'
+                sh 'ls -la'
+                sh 'go env -w GOPROXY=https://goproxy.cn,direct'
+                sh 'go build -o collect-admin-api main.go'
             }
         }
         stage('Deploy via SSH') {
