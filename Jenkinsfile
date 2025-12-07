@@ -35,6 +35,7 @@ pipeline {
                     publishers: [
                         sshPublisherDesc(
                             configName: 'Developer', // 在系统设置中配置的名称
+                            verbose: true,
                             transfers: [
                                 sshTransfer(
                                     sourceFiles: 'bin/**',
