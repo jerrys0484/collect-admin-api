@@ -44,6 +44,7 @@ pipeline {
                                     execCommand: '''
                                         # 执行重启服务
                                         cd collect/bin
+                                        chmod +x restart.sh collect-admin-api
                                         sh restart.sh
                                         echo "部署完成于 $(date)"
                                     ''',
