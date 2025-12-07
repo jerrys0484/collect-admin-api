@@ -39,11 +39,11 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: 'bin/**',
                                     // 远程目录（相对于系统配置中的“Remote Directory”）
-                                    remoteDirectory: './collect/collect-admin-api',
+                                    remoteDirectory: 'collect-admin-api',
                                     // 传输完成后在远程执行的命令
                                     execCommand: '''
                                         # 执行重启服务
-                                        cd ./collect/collect-admin-api/bin
+                                        cd collect-admin-api/bin
                                         chmod +x restart.sh collect-admin-api
                                         sh restart.sh >> deploy.log
                                         echo "部署完成于 $(date)"
