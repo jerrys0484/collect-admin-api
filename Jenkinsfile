@@ -10,11 +10,11 @@ pipeline {
         stage('Load Config') {
             steps {
                 configFileProvider(
-                    [configFile(fileId: 'a71f7ca2-1232-4c47-b7cf-4a9e1ab4bb4a', targetLocation: 'collect-admin-api.yaml')]
+                    [configFile(fileId: 'a71f7ca2-1232-4c47-b7cf-4a9e1ab4bb4a', targetLocation: 'bin/collect-admin-api.yaml')]
                 ) {
                     sh '''
                         echo "配置文件已生成："
-                        cat collect-admin-api.yaml
+                        cat bin/collect-admin-api.yaml
                     '''
                 }
             }
@@ -24,7 +24,8 @@ pipeline {
                 sh 'echo "开始构建..."'
                 sh 'ls -la'
                 sh 'go env -w GOPROXY=https://goproxy.cn,direct'
-                sh 'go build -o collect-admin-api main.go'
+                sh 'go build -o bin/collect-admin-api main.go'
+                sh 'cp -rf resource bin/resource'
             }
         }
         stage('Deploy via SSH') {
@@ -35,12 +36,13 @@ pipeline {
                             configName: 'Developer', // 在系统设置中配置的名称
                             transfers: [
                                 sshTransfer(
-                                    sourceFiles: 'collect-admin-api,resource,collect-admin-api.yaml',
+                                    sourceFiles: 'bin/*',
                                     // 远程目录（相对于系统配置中的“Remote Directory”）
                                     remoteDirectory: 'collect',
                                     // 传输完成后在远程执行的命令
                                     execCommand: '''
-                                        # 这是一个在远程服务器上执行的脚本
+                                        # 执行重启服务
+                                        sh bin/restart.sh
                                         echo "部署完成于 $(date)"
                                     ''',
                                     // 可选：是否在传输前清空远程目录
