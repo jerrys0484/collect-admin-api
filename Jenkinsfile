@@ -43,7 +43,7 @@ pipeline {
                                     // 传输完成后在远程执行的命令
                                     execCommand: '''
                                         # 执行重启服务
-                                        cd collect-admin-api/bin
+                                        cd /home/wwwroot/collect-admin-api/bin
                                         chmod +x restart.sh collect-admin-api
                                         sh restart.sh >> deploy.log
                                         echo "部署完成于 $(date)"
