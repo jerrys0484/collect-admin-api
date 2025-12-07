@@ -10,7 +10,7 @@ pipeline {
         stage('Load Config') {
             steps {
                 configFileProvider(
-                    [configFile(fileId: 'a71f7ca2-1232-4c47-b7cf-4a9e1ab4bb4a', targetLocation: 'bin/collect-admin-api.yaml')]
+                    [configFile(fileId: 'collect-admin-api', targetLocation: 'bin/collect-admin-api.yaml')]
                 ) {
                     sh '''
                         echo "配置文件已生成："
