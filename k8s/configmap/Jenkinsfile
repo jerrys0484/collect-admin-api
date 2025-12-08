@@ -21,7 +21,7 @@ pipeline {
                             kubectl create configmap ${FILE_ID}-config \
                                 --from-file=${CONFIG_FILE} \
                                 --from-literal=VERSION=${BUILD_NUMBER} \
-                                --from-literal=BUILD_TIME="\$(date)"
+                                --dry-run=client -o yaml | kubectl apply -f -
                             # 查看创建的配置文件
                             kubectl get configmap ${FILE_ID}-config
                         """
