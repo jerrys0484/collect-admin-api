@@ -10,20 +10,21 @@ pipeline {
         stage('Load Config Apply k8s') {
             steps {
                 configFileProvider(
-                    [configFile(fileId: '${FILE_ID}', variable: 'CONFIG_FILE')]
+                    [configFile(fileId: "${FILE_ID}", variable: 'CONFIG_FILE')]
                 ) {
                     withKubeConfig([
                         credentialsId: 'k8s-kubeconfig',
                         serverUrl: 'http://192.168.0.102:8001'
                     ]) {
-                        sh '''
+                        sh """
                             # 执行创建
                             kubectl create configmap ${FILE_ID}-config \
                                 --from-file=${CONFIG_FILE} \
                                 --from-literal=VERSION=${BUILD_NUMBER}
+                                --from-literal=BUILD_TIME="\$(date)"
                             # 查看创建的配置文件
                             kubectl get configmap ${FILE_ID}-config
-                        '''
+                        """
                     }
                 }
             }
