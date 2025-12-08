@@ -7,8 +7,8 @@ spec:
   selector:
     app: myapp
   ports:
-    - port: 80
-      targetPort: 8080
+    - port: 80           # 服务端口（外部访问用）
+      targetPort: 80     # 容器端口（必须与容器内应用监听的端口一致）
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -28,4 +28,4 @@ spec:
         - name: myapp
           image: nginx:alpine
           ports:
-            - containerPort: 8080
+            - containerPort: 80
