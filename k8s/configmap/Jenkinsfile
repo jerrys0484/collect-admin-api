@@ -1,0 +1,21 @@
+pipeline {
+    // Run on an agent where we want to use Go
+    agent any
+
+    stages {
+        stage('Load Config Apply k8s') {
+            steps {
+                configFileProvider(
+                    [configFile(fileId: 'collect-admin-api', targetLocation: 'bin/collect-admin-api.yaml')]
+                ) {
+                    sh '''
+                        cat bin/collect-admin-api.yaml
+                        kubectl create configmap collect-admin-api-config \
+                            --from-file=bin/collect-admin-api.yaml \
+                            --dry-run=client -o yaml > configmap.yaml
+                    '''
+                }
+            }
+        }
+    }
+}
