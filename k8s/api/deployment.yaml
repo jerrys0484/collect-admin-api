@@ -1,0 +1,41 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_NAME}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ${APP_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${APP_NAME}
+    spec:
+      volumes:
+        - name: ${APP_NAME}-config
+          configMap:
+            name: ${APP_NAME}-config
+      containers:
+        - name: ${APP_NAME}
+          image: ${REGISTRY}/${APP_NAME}-${ENV}:${IMAGE_TAG}
+          ports:
+            - containerPort: ${PORT}
+          volumeMounts:
+            - name: ${APP_NAME}-config
+              mountPath: /app/bin/${APP_NAME}.yaml
+              subPath: ${APP_NAME}.yaml
+---
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${APP_NAME}-service
+spec:
+  selector:
+    app: ${APP_NAME}
+  ports:
+    - port: ${PORT}
+      targetPort: ${PORT}
+  type: ClusterIP  # 集群内访问
