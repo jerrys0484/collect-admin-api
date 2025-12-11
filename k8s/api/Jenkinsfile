@@ -20,6 +20,7 @@ pipeline {
                 sh 'echo "开始构建..."'
                 sh 'go env -w GOPROXY=https://goproxy.cn,direct'
                 sh 'go build -o bin/collect-admin-api main.go'
+                sh 'chmod +x bin/collect-admin-api'
                 sh 'cp -rf resource bin/resource'
                 sh 'echo "构建完成"'
                 sh 'ls -la bin'
