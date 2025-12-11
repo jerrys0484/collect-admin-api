@@ -4,7 +4,6 @@ pipeline {
 
     environment {
         FILE_ID = 'collect-admin-api'
-        KUBECONFIG = credentials('kubeconfig-credential')
     }
 
     stages {
