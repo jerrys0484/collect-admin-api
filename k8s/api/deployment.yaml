@@ -13,7 +13,10 @@ spec:
       labels:
         app: ${APP_NAME}
     spec:
-      hostNetwork: true
+      hostAliases:
+        - ip: "172.28.250.64"
+          hostnames:
+            - "wsl-host"
       imagePullSecrets:
         - name: regcred
       volumes:
@@ -22,7 +25,7 @@ spec:
             name: ${APP_NAME}-config
       containers:
         - name: ${APP_NAME}
-          image: localhost:5000/${APP_NAME}-${ENV}:${IMAGE_TAG}
+          image: 172.28.250.64:5000/${APP_NAME}-${ENV}:${IMAGE_TAG}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: ${PORT}
