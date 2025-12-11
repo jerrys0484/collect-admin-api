@@ -8,6 +8,7 @@ pipeline {
         IMAGE_TAG = UUID.randomUUID().toString()
         PORT = '8879'
         ENV = "develop"
+        KUBECONFIG = credentials('kubeconfig-credential')
     }
 
     // Ensure the desired Go version is installed for all stages,
@@ -44,7 +45,7 @@ pipeline {
                         # 确保 envsubst 已安装
                         if ! command -v envsubst &> /dev/null; then
                             echo "安装 envsubst..."
-                            apt-get update && apt-get install -y gettext-base
+                            su - root -c "apt-get update && apt-get install -y gettext-base"
                         fi
                         # 替换变量并应用
                         envsubst < k8s/api/deployment.yaml | kubectl apply -f - --force
