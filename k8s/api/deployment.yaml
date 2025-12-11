@@ -13,6 +13,7 @@ spec:
       labels:
         app: ${APP_NAME}
     spec:
+      hostNetwork: true
       hostAliases:
         - ip: "172.28.250.64"
           hostnames:
