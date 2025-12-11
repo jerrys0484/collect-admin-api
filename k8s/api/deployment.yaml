@@ -19,7 +19,7 @@ spec:
             name: ${APP_NAME}-config
       containers:
         - name: ${APP_NAME}
-          image: http://registry.default.svc.cluster.local/${APP_NAME}-${ENV}:${IMAGE_TAG}
+          image: http://registry.default.svc.cluster.local:5000/${APP_NAME}-${ENV}:${IMAGE_TAG}
           ports:
             - containerPort: ${PORT}
           volumeMounts:
