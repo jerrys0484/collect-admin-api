@@ -41,15 +41,11 @@ pipeline {
                     serverUrl: 'http://192.168.0.102:8001'
                 ]) {
                     sh '''
-                        # 确保 envsubst 已安装
-                        if ! command -v envsubst &> /dev/null; then
-                            echo "安装 envsubst..."
-                            su - root -c "apt-get update && apt-get install -y gettext-base"
-                        fi
                         # 替换变量并应用
                         envsubst < k8s/api/deployment.yaml | kubectl apply -f - --force
                         echo "✅ 部署完成"
                         echo "应用名称: ${APP_NAME}"
+                        echo "应用端口: ${PORT}"
                         echo "镜像: ${REGISTRY}/${APP_NAME}-${ENV}:${IMAGE_TAG}"
                     '''
                 }
