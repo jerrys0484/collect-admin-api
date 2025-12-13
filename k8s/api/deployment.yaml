@@ -32,7 +32,7 @@ spec:
             - containerPort: ${PORT}
           volumeMounts:
             - name: ${APP_NAME}-config
-              mountPath: /app/bin/${APP_NAME}.yaml
+              mountPath: /app/${APP_NAME}.yaml
               subPath: ${APP_NAME}.yaml
 ---
 # service.yaml

@@ -6,5 +6,5 @@ COPY . .
 
 EXPOSE 8879
 
-#ENTRYPOINT ["/app/collect-admin-api", "--gf.gcfg.file=/app/collect-admin-api.yaml"]
-CMD ["sh", "-c", "echo 'Debug mode: starting sleep...' && ls -la && sleep infinity"]
+ENTRYPOINT ["./collect-admin-api", "--gf.gcfg.file=./collect-admin-api.yaml"]
+#CMD ["sh", "-c", "echo 'Debug mode: starting sleep...' && ls -la && sleep infinity"]
