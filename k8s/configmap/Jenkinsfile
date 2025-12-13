@@ -1,0 +1,33 @@
+pipeline {
+    // Run on an agent where we want to use Go
+    agent any
+
+    environment {
+        FILE_ID = 'collect-admin-api'
+    }
+
+    stages {
+        stage('Load Config Apply k8s') {
+            steps {
+                configFileProvider(
+                    [configFile(fileId: "${FILE_ID}", variable: 'CONFIG_FILE')]
+                ) {
+                    withKubeConfig([
+                        credentialsId: 'k8s-kubeconfig',
+                        serverUrl: 'http://192.168.0.102:8001'
+                    ]) {
+                        sh """
+                            # 执行创建
+                            kubectl create configmap ${FILE_ID}-config \
+                                --from-file=${FILE_ID}.yaml=${CONFIG_FILE} \
+                                --from-literal=VERSION=${BUILD_NUMBER} \
+                                --dry-run=client -o yaml | kubectl apply -f -
+                            # 查看创建的配置文件
+                            kubectl get configmap ${FILE_ID}-config
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
