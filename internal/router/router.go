@@ -10,6 +10,7 @@ package router
 import (
 	"context"
 	"github.com/gogf/gf/v2/net/ghttp"
+	collectRouter "github.com/tiger1103/gfast/v3/internal/app/collect/router"
 	commonRouter "github.com/tiger1103/gfast/v3/internal/app/common/router"
 	commonService "github.com/tiger1103/gfast/v3/internal/app/common/service"
 	systemRouter "github.com/tiger1103/gfast/v3/internal/app/system/router"
@@ -29,6 +30,8 @@ func (router *Router) BindController(ctx context.Context, group *ghttp.RouterGro
 		systemRouter.R.BindController(ctx, group)
 		// 绑定公共路由
 		commonRouter.R.BindController(ctx, group)
+		// 绑定采集器路由
+		collectRouter.R.BindController(ctx, group)
 		//自动绑定定义的模块
 		if err := libRouter.RouterAutoBind(ctx, router, group); err != nil {
 			panic(err)
