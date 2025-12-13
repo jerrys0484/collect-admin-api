@@ -6,4 +6,4 @@ COPY . .
 
 EXPOSE 8879
 
-ENTRYPOINT ["./collect-admin-api",'--gf.gcfg.file="./collect-admin-api.yaml"']
+ENTRYPOINT ["./collect-admin-api", "--gf.gcfg.file=./collect-admin-api.yaml"]
