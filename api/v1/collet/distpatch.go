@@ -45,7 +45,7 @@ type DispatchGetRes struct {
 
 type DispatchEditReq struct {
 	g.Meta `path:"/dispatch/edit" tags:"Dispatch" method:"put" summary:"Edit Dispatch"`
-	Uuid   string `p:"uuid" v:"required|Uuid can not empty"`
+	Uuid   string `p:"uuid" v:"required#Uuid can not empty"`
 	*DispatchReq
 }
 

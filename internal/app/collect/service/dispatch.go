@@ -13,14 +13,10 @@ import (
 
 type (
 	IDispatch interface {
-		// List 系统参数列表
 		List(ctx context.Context, req *collet.DispatchSearchReq) (res *collet.DispatchSearchRes, err error)
 		Add(ctx context.Context, req *collet.DispatchAddReq) (err error)
-		// Get 获取系统参数
 		Get(ctx context.Context, uuid string) (res *collet.DispatchGetRes, err error)
-		// Edit 修改系统参数
 		Edit(ctx context.Context, req *collet.DispatchEditReq) (err error)
-		// Delete 删除系统参数
 		Delete(ctx context.Context, uuids []string) (err error)
 	}
 )

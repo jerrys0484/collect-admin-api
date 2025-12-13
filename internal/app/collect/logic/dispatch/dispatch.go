@@ -29,7 +29,7 @@ func (s *sDispatch) List(ctx context.Context, req *collet.DispatchSearchReq) (re
 		m := dao.Dispatch.Ctx(ctx)
 		if req != nil {
 			if req.Name != "" {
-				m = m.Where("config_name like ?", "%"+req.Name+"%")
+				m = m.Where("name like ?", "%"+req.Name+"%")
 			}
 		}
 		res.Total, err = m.Count()
@@ -76,7 +76,7 @@ func (s *sDispatch) Get(ctx context.Context, uuid string) (res *collet.DispatchG
 func (s *sDispatch) Edit(ctx context.Context, req *collet.DispatchEditReq) (err error) {
 	err = g.Try(ctx, func(ctx context.Context) {
 		liberr.ErrIsNil(ctx, err)
-		_, err = dao.Dispatch.Ctx(ctx).WherePri(req.Uuid).Update(do.Dispatch{
+		_, err = dao.Dispatch.Ctx(ctx).Where("uuid = ?", req.Uuid).Update(do.Dispatch{
 			Name:       req.Name,
 			Way:        req.Way,
 			Type:       req.Type,

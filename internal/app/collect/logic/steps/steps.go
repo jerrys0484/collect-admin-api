@@ -7,13 +7,14 @@ import (
 	"github.com/tiger1103/gfast/v3/api/v1/collet"
 	"github.com/tiger1103/gfast/v3/internal/app/collect/dao"
 	"github.com/tiger1103/gfast/v3/internal/app/collect/model/do"
+	"github.com/tiger1103/gfast/v3/internal/app/collect/service"
 	systemConsts "github.com/tiger1103/gfast/v3/internal/app/system/consts"
 	"github.com/tiger1103/gfast/v3/library/liberr"
 	"time"
 )
 
 func init() {
-	//service.RegisterSteps(New())
+	service.RegisterSteps(New())
 }
 
 func New() *sSteps {
@@ -22,14 +23,13 @@ func New() *sSteps {
 
 type sSteps struct{}
 
-// List 系统参数列表
 func (s *sSteps) List(ctx context.Context, req *collet.StepsSearchReq) (res *collet.StepsSearchRes, err error) {
 	res = new(collet.StepsSearchRes)
 	err = g.Try(ctx, func(ctx context.Context) {
 		m := dao.Steps.Ctx(ctx)
 		if req != nil {
 			if req.Name != "" {
-				m = m.Where("config_name like ?", "%"+req.Name+"%")
+				m = m.Where("name like ?", "%"+req.Name+"%")
 			}
 		}
 		res.Total, err = m.Count()
@@ -64,7 +64,6 @@ func (s *sSteps) Add(ctx context.Context, req *collet.StepsAddReq) (err error) {
 	return
 }
 
-// Get 获取系统参数
 func (s *sSteps) Get(ctx context.Context, uuid string) (res *collet.StepsGetRes, err error) {
 	res = new(collet.StepsGetRes)
 	err = g.Try(ctx, func(ctx context.Context) {
@@ -74,11 +73,10 @@ func (s *sSteps) Get(ctx context.Context, uuid string) (res *collet.StepsGetRes,
 	return
 }
 
-// Edit 修改系统参数
 func (s *sSteps) Edit(ctx context.Context, req *collet.StepsEditReq) (err error) {
 	err = g.Try(ctx, func(ctx context.Context) {
 		liberr.ErrIsNil(ctx, err)
-		_, err = dao.Steps.Ctx(ctx).WherePri(req.Uuid).Update(do.Steps{
+		_, err = dao.Steps.Ctx(ctx).Where("uuid = ?", req.Uuid).Update(do.Steps{
 			Name:       req.Name,
 			Type:       req.Type,
 			Request:    req.Request,
@@ -90,7 +88,6 @@ func (s *sSteps) Edit(ctx context.Context, req *collet.StepsEditReq) (err error)
 	return
 }
 
-// Delete 删除系统参数
 func (s *sSteps) Delete(ctx context.Context, uuids []string) (err error) {
 	err = g.Try(ctx, func(ctx context.Context) {
 		_, err = dao.Steps.Ctx(ctx).Delete(dao.Steps.Columns().Uuid+" in (?)", uuids)

@@ -45,7 +45,7 @@ type StepsGetRes struct {
 
 type StepsEditReq struct {
 	g.Meta `path:"/steps/edit" tags:"Steps" method:"put" summary:"Edit Steps"`
-	Uuid   int64 `p:"uuid" v:"required|Uuid can not empty"`
+	Uuid   string `p:"uuid" v:"required#Uuid can not empty"`
 	*StepsReq
 }
 
