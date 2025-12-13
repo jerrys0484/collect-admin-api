@@ -19,7 +19,7 @@ pipeline {
                         sh """
                             # 执行创建
                             kubectl create configmap ${FILE_ID}-config \
-                                --from-file=${CONFIG_FILE} \
+                                --from-file=${FILE_ID}.yaml=${CONFIG_FILE} \
                                 --from-literal=VERSION=${BUILD_NUMBER} \
                                 --dry-run=client -o yaml | kubectl apply -f -
                             # 查看创建的配置文件
