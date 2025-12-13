@@ -26,7 +26,7 @@ spec:
             name: ${APP_NAME}-config
       containers:
         - name: ${APP_NAME}
-          image: http://172.28.250.64:5000/${APP_NAME}-${ENV}:${IMAGE_TAG}
+          image: ${REGISTRY}/${APP_NAME}-${ENV}:${IMAGE_TAG}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: ${PORT}
