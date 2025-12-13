@@ -8,19 +8,19 @@ spec:
   selector:
     matchLabels:
       app: ${APP_NAME}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # 在更新期间，最多可以比期望的副本数多出多少个 Pod。可以为数字或百分比。
+      # (5 个副本 + 25% surge = 最多 6 个 Pod 处于运行状态)
+      maxSurge: 25%
+      # 在更新期间，最多可以有多少个 Pod 处于不可用状态。可以为数字或百分比。
+      # (5 个副本 - 25% unavailable = 至少 4 个 Pod 必须保持可用)
+      maxUnavailable: 25%
   template:
     metadata:
       labels:
         app: ${APP_NAME}
-    strategy:
-      type: RollingUpdate
-      rollingUpdate:
-        # 在更新期间，最多可以比期望的副本数多出多少个 Pod。可以为数字或百分比。
-        # (5 个副本 + 25% surge = 最多 6 个 Pod 处于运行状态)
-        maxSurge: 25%
-        # 在更新期间，最多可以有多少个 Pod 处于不可用状态。可以为数字或百分比。
-        # (5 个副本 - 25% unavailable = 至少 4 个 Pod 必须保持可用)
-        maxUnavailable: 25%
     spec:
       volumes:
         - name: ${APP_NAME}-config
