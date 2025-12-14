@@ -57,3 +57,28 @@ type StepsDeleteReq struct {
 }
 
 type StepsDeleteRes struct{}
+
+type StepsDebugReq struct {
+	g.Meta       `path:"/steps/debug" tags:"Steps" method:"post" summary:"Debug Steps"`
+	Uuid         string `p:"uuid" v:"required#Uuid can not empty"`
+	HttpResponse string `p:"httpResponse"`
+	Params       string `p:"params" v:"required#Params can not empty"`
+}
+
+type StepsDebugRes struct {
+	g.Meta        `mime:"application/json"`
+	HttpResponse  string `json:"httpResponse"`
+	DebugResponse string `json:"debugResponse"`
+}
+
+type StepDebugCollectRes struct {
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    CollectData `json:"data"`
+}
+
+type CollectData struct {
+	Code     int                    `json:"code"`
+	Response map[string]interface{} `json:"response"`
+	Collect  map[string]interface{} `json:"collect"`
+}

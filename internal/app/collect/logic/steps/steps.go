@@ -2,7 +2,11 @@ package steps
 
 import (
 	"context"
+	"encoding/json"
+	"time"
+
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/gclient"
 	"github.com/google/uuid"
 	"github.com/tiger1103/gfast/v3/api/v1/collet"
 	"github.com/tiger1103/gfast/v3/internal/app/collect/dao"
@@ -10,7 +14,6 @@ import (
 	"github.com/tiger1103/gfast/v3/internal/app/collect/service"
 	systemConsts "github.com/tiger1103/gfast/v3/internal/app/system/consts"
 	"github.com/tiger1103/gfast/v3/library/liberr"
-	"time"
 )
 
 func init() {
@@ -92,6 +95,43 @@ func (s *sSteps) Delete(ctx context.Context, uuids []string) (err error) {
 	err = g.Try(ctx, func(ctx context.Context) {
 		_, err = dao.Steps.Ctx(ctx).Delete(dao.Steps.Columns().Uuid+" in (?)", uuids)
 		liberr.ErrIsNil(ctx, err, "Delete Failed")
+	})
+	return
+}
+
+func (s *sSteps) Debug(ctx context.Context, req *collet.StepsDebugReq) (res *collet.StepsDebugRes, err error) {
+	res = new(collet.StepsDebugRes)
+	err = g.Try(ctx, func(ctx context.Context) {
+		host := g.Cfg().MustGet(ctx, "collect.host").String()
+		endpoint := g.Cfg().MustGet(ctx, "collect.endpoint").String()
+		url := host + endpoint + "/3"
+		var err1 error
+		var response *gclient.Response
+		response, err1 = g.Client().ContentJson().Timeout(60*time.Second).Post(ctx, url, map[string]interface{}{
+			"data": map[string]string{
+				"test": "1235",
+			},
+			"raw": req.HttpResponse,
+		})
+		defer func(response *gclient.Response) {
+			err = response.Close()
+		}(response)
+		str := response.ReadAllString()
+		if str == "" {
+			res.HttpResponse = "Empty Collect API Server: " + url
+			return
+		}
+		var collectRes collet.StepDebugCollectRes
+		err1 = json.Unmarshal([]byte(str), &collectRes)
+		if err1 != nil {
+			res.HttpResponse = str
+			res.DebugResponse = err1.Error()
+			return
+		}
+		b2, _ := json.Marshal(collectRes.Data.Collect)
+		b3, _ := json.Marshal(collectRes.Data.Response)
+		res.HttpResponse = string(b3)
+		res.DebugResponse = string(b2)
 	})
 	return
 }

@@ -41,3 +41,8 @@ func (c *stepsController) Delete(ctx context.Context, req *collet.StepsDeleteReq
 	err = service.Steps().Delete(ctx, req.Uuids)
 	return
 }
+
+func (c *stepsController) Debug(ctx context.Context, req *collet.StepsDebugReq) (res *collet.StepsDebugRes, err error) {
+	res, err = service.Steps().Debug(ctx, req)
+	return
+}
