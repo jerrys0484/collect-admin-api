@@ -13,15 +13,12 @@ import (
 
 type (
 	ISteps interface {
-		// List 系统参数列表
 		List(ctx context.Context, req *collet.StepsSearchReq) (res *collet.StepsSearchRes, err error)
 		Add(ctx context.Context, req *collet.StepsAddReq) (err error)
-		// Get 获取系统参数
 		Get(ctx context.Context, uuid string) (res *collet.StepsGetRes, err error)
-		// Edit 修改系统参数
 		Edit(ctx context.Context, req *collet.StepsEditReq) (err error)
-		// Delete 删除系统参数
 		Delete(ctx context.Context, uuids []string) (err error)
+		Debug(ctx context.Context, req *collet.StepsDebugReq) (res *collet.StepsDebugRes, err error)
 	}
 )
 
