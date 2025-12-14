@@ -3,6 +3,8 @@ package steps
 import (
 	"context"
 	"encoding/json"
+	"time"
+
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/gclient"
 	"github.com/google/uuid"
@@ -12,7 +14,6 @@ import (
 	"github.com/tiger1103/gfast/v3/internal/app/collect/service"
 	systemConsts "github.com/tiger1103/gfast/v3/internal/app/system/consts"
 	"github.com/tiger1103/gfast/v3/library/liberr"
-	"time"
 )
 
 func init() {
@@ -103,17 +104,21 @@ func (s *sSteps) Debug(ctx context.Context, req *collet.StepsDebugReq) (res *col
 	err = g.Try(ctx, func(ctx context.Context) {
 		host := g.Cfg().MustGet(ctx, "collect.host").String()
 		endpoint := g.Cfg().MustGet(ctx, "collect.endpoint").String()
-		url := host + endpoint + "/baidu"
+		url := host + endpoint + "/3"
 		var err1 error
 		var response *gclient.Response
-		response, err1 = g.Client().ContentJson().Timeout(60*time.Second).Post(ctx, url, map[string]string{})
+		response, err1 = g.Client().ContentJson().Timeout(60*time.Second).Post(ctx, url, map[string]interface{}{
+			"data": map[string]string{
+				"test": "1235",
+			},
+			"raw": req.HttpResponse,
+		})
 		defer func(response *gclient.Response) {
 			err = response.Close()
 		}(response)
 		str := response.ReadAllString()
-		if str == "" || err1 != nil {
-			res.HttpResponse = url
-			res.DebugResponse = err1.Error()
+		if str == "" {
+			res.HttpResponse = "Empty Collect API Server: " + url
 			return
 		}
 		var collectRes collet.StepDebugCollectRes
@@ -124,7 +129,8 @@ func (s *sSteps) Debug(ctx context.Context, req *collet.StepsDebugReq) (res *col
 			return
 		}
 		b2, _ := json.Marshal(collectRes.Data.Collect)
-		res.HttpResponse = collectRes.Data.Response
+		b3, _ := json.Marshal(collectRes.Data.Response)
+		res.HttpResponse = string(b3)
 		res.DebugResponse = string(b2)
 	})
 	return

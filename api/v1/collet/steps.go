@@ -68,7 +68,7 @@ type StepsDebugReq struct {
 type StepsDebugRes struct {
 	g.Meta        `mime:"application/json"`
 	HttpResponse  string `json:"httpResponse"`
-	DebugResponse string `json:"DebugResponse"`
+	DebugResponse string `json:"debugResponse"`
 }
 
 type StepDebugCollectRes struct {
@@ -79,6 +79,6 @@ type StepDebugCollectRes struct {
 
 type CollectData struct {
 	Code     int                    `json:"code"`
-	Response string                 `json:"response"`
+	Response map[string]interface{} `json:"response"`
 	Collect  map[string]interface{} `json:"collect"`
 }
