@@ -87,6 +87,7 @@ func (s *sSteps) Edit(ctx context.Context, req *collet.StepsEditReq) (err error)
 			UpdateTime: time.Now().UTC().Unix(),
 		})
 		liberr.ErrIsNil(ctx, err, "Edit Failed")
+		_, err = g.Redis().Del(ctx, "CT_STEPS_"+req.Uuid)
 	})
 	return
 }
@@ -104,15 +105,12 @@ func (s *sSteps) Debug(ctx context.Context, req *collet.StepsDebugReq) (res *col
 	err = g.Try(ctx, func(ctx context.Context) {
 		host := g.Cfg().MustGet(ctx, "collect.host").String()
 		endpoint := g.Cfg().MustGet(ctx, "collect.endpoint").String()
-		url := host + endpoint + "/3"
+		url := host + endpoint + "/" + req.Uuid
 		var err1 error
 		var response *gclient.Response
-		response, err1 = g.Client().ContentJson().Timeout(60*time.Second).Post(ctx, url, map[string]interface{}{
-			"data": map[string]string{
-				"test": "1235",
-			},
-			"raw": req.HttpResponse,
-		})
+		var params g.Map
+		err = json.Unmarshal([]byte(req.Params), &params)
+		response, err1 = g.Client().ContentJson().Timeout(60*time.Second).Post(ctx, url, params)
 		defer func(response *gclient.Response) {
 			err = response.Close()
 		}(response)

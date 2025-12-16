@@ -18,6 +18,7 @@ main
 output/
 manifest/output/
 *.exe
+*.iml
 tmp/
 resource/data/gen_sql
 resource/log/
