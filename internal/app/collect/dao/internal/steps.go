@@ -25,6 +25,8 @@ type StepsColumns struct {
 	Uuid       string // 标识
 	Name       string // 名称
 	Type       string // 类型
+	Data       string // 数据模板(json)
+	Vars       string // 变量模板(json)
 	Request    string // 请求参数(json)
 	Response   string // 响应参数配置(json)
 	CreateTime string // 创建时间
@@ -37,6 +39,8 @@ var stepsColumns = StepsColumns{
 	Uuid:       "uuid",
 	Name:       "name",
 	Type:       "type",
+	Data:       "data",
+	Vars:       "vars",
 	Request:    "request",
 	Response:   "response",
 	CreateTime: "create_time",

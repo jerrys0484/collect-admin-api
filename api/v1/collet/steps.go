@@ -19,16 +19,18 @@ type StepsSearchRes struct {
 	common.ListRes
 }
 
-type StepsReq struct {
+type StepsAdd struct {
 	Name     string `p:"name"  v:"required#Name can not empty"`
 	Type     string `p:"type"  v:"required#Type can not empty"`
-	Request  string `p:"request" v:"required#Request can not empty"`
+	Data     string `p:"data"`
+	Vars     string `p:"vars"`
+	Request  string `p:"request"`
 	Response string `p:"response"`
 }
 
 type StepsAddReq struct {
 	g.Meta `path:"/steps/add" tags:"Steps" method:"post" summary:"Add Steps"`
-	*StepsReq
+	*StepsAdd
 }
 
 type StepsAddRes struct{}
@@ -43,10 +45,19 @@ type StepsGetRes struct {
 	Data   *entity.Steps `json:"data"`
 }
 
+type StepsEdit struct {
+	Uuid     string `p:"uuid" v:"required#Uuid can not empty"`
+	Name     string `p:"name"`
+	Type     string `p:"type"`
+	Data     string `p:"data"`
+	Vars     string `p:"vars"`
+	Request  string `p:"request"`
+	Response string `p:"response"`
+}
+
 type StepsEditReq struct {
 	g.Meta `path:"/steps/edit" tags:"Steps" method:"put" summary:"Edit Steps"`
-	Uuid   string `p:"uuid" v:"required#Uuid can not empty"`
-	*StepsReq
+	*StepsEdit
 }
 
 type StepsEditRes struct{}

@@ -19,6 +19,8 @@ CREATE TABLE `ct_steps` (
   `uuid` char(36) NOT NULL COMMENT '标识',
   `name` varchar(255) NOT NULL COMMENT '名称',
   `type` char(36) NOT NULL COMMENT '类型',
+  `vars` text NOT NULL COMMENT '变量模板(json)',
+  `data` varchar(1000) NOT NULL COMMENT '数据模板(json)',
   `request` text NOT NULL COMMENT '请求参数(json)',
   `response` text NOT NULL COMMENT '响应参数配置(json)',
   `create_time` int(11) unsigned NOT NULL DEFAULT 0 COMMENT '创建时间',

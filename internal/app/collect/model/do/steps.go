@@ -15,6 +15,8 @@ type Steps struct {
 	Uuid       any // 标识
 	Name       any // 名称
 	Type       any // 类型
+	Data       any // 数据模板(json)
+	Vars       any // 变量模板(json)
 	Request    any // 请求参数(json)
 	Response   any // 响应参数配置(json)
 	CreateTime any // 创建时间

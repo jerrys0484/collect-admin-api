@@ -58,6 +58,8 @@ func (s *sSteps) Add(ctx context.Context, req *collet.StepsAddReq) (err error) {
 			Uuid:       uid.String(),
 			Name:       req.Name,
 			Type:       req.Type,
+			Data:       req.Data,
+			Vars:       req.Vars,
 			Request:    req.Request,
 			Response:   req.Response,
 			CreateTime: time.Now().UTC().Unix(),
@@ -79,13 +81,37 @@ func (s *sSteps) Get(ctx context.Context, uuid string) (res *collet.StepsGetRes,
 func (s *sSteps) Edit(ctx context.Context, req *collet.StepsEditReq) (err error) {
 	err = g.Try(ctx, func(ctx context.Context) {
 		liberr.ErrIsNil(ctx, err)
-		_, err = dao.Steps.Ctx(ctx).Where("uuid = ?", req.Uuid).Update(do.Steps{
-			Name:       req.Name,
-			Type:       req.Type,
-			Request:    req.Request,
-			Response:   req.Response,
+		var res = do.Steps{
 			UpdateTime: time.Now().UTC().Unix(),
-		})
+		}
+		if req.Name != "" {
+			res.Name = req.Name
+		}
+		if req.Type != "" {
+			res.Type = req.Type
+		}
+		if req.Data != "" {
+			res.Data = req.Data
+			if req.Data == "--" {
+				res.Data = ""
+			}
+		}
+		if req.Vars != "" {
+			res.Vars = req.Vars
+			if req.Vars == "--" {
+				res.Vars = ""
+			}
+		}
+		if req.Request != "" {
+			res.Request = req.Request
+		}
+		if req.Response != "" {
+			res.Response = req.Response
+			if req.Response == "--" {
+				res.Response = ""
+			}
+		}
+		_, err = dao.Steps.Ctx(ctx).Where("uuid = ?", req.Uuid).Update(res)
 		liberr.ErrIsNil(ctx, err, "Edit Failed")
 		_, err = g.Redis().Del(ctx, "CT_STEPS_"+req.Uuid)
 	})
@@ -106,26 +132,25 @@ func (s *sSteps) Debug(ctx context.Context, req *collet.StepsDebugReq) (res *col
 		host := g.Cfg().MustGet(ctx, "collect.host").String()
 		endpoint := g.Cfg().MustGet(ctx, "collect.endpoint").String()
 		url := host + endpoint + "/" + req.Uuid
-		var err1 error
 		var response *gclient.Response
 		var params g.Map
 		err = json.Unmarshal([]byte(req.Params), &params)
-		response, err1 = g.Client().ContentJson().Timeout(60*time.Second).Post(ctx, url, params)
+		response, err = g.Client().ContentJson().Timeout(60*time.Second).Post(ctx, url, params)
 		defer func(response *gclient.Response) {
 			err = response.Close()
 		}(response)
 		str := response.ReadAllString()
+		if err != nil {
+			res.HttpResponse = str
+			res.DebugResponse = err.Error()
+			return
+		}
 		if str == "" {
 			res.HttpResponse = "Empty Collect API Server: " + url
 			return
 		}
 		var collectRes collet.StepDebugCollectRes
-		err1 = json.Unmarshal([]byte(str), &collectRes)
-		if err1 != nil {
-			res.HttpResponse = str
-			res.DebugResponse = err1.Error()
-			return
-		}
+		_ = json.Unmarshal([]byte(str), &collectRes)
 		b2, _ := json.Marshal(collectRes.Data.Collect)
 		b3, _ := json.Marshal(collectRes.Data.Response)
 		res.HttpResponse = string(b3)
