@@ -72,6 +72,7 @@ type StepsDeleteRes struct{}
 type StepsDebugReq struct {
 	g.Meta       `path:"/steps/debug" tags:"Steps" method:"post" summary:"Debug Steps"`
 	Uuid         string `p:"uuid" v:"required#Uuid can not empty"`
+	Group        string `p:"group" v:"required#Group can not empty"`
 	HttpResponse string `p:"httpResponse"`
 	Params       string `p:"params" v:"required#Params can not empty"`
 }

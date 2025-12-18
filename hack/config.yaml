@@ -3,7 +3,7 @@ gfcli:
   gen:
     dao:
       - link:            "mysql:root:root@tcp(127.0.0.1:3306)/collection"
-        tables:          "ct_steps"
+        tables:          "ct_dispatch"
         removePrefix:    "ct_"
         descriptionTag:  true
         noModelComment:  true

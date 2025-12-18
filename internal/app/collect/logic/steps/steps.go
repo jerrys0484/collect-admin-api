@@ -130,12 +130,16 @@ func (s *sSteps) Debug(ctx context.Context, req *collet.StepsDebugReq) (res *col
 	res = new(collet.StepsDebugRes)
 	err = g.Try(ctx, func(ctx context.Context) {
 		host := g.Cfg().MustGet(ctx, "collect.host").String()
-		endpoint := g.Cfg().MustGet(ctx, "collect.endpoint").String()
-		url := host + endpoint + "/" + req.Uuid
+		timeout := g.Cfg().MustGet(ctx, "collect.timeout").Duration()
+		if host == "" {
+			res.HttpResponse = "Empty Collect Host"
+			return
+		}
+		url := host + "/" + req.Group + "/" + req.Uuid
 		var response *gclient.Response
 		var params g.Map
 		err = json.Unmarshal([]byte(req.Params), &params)
-		response, err = g.Client().ContentJson().Timeout(60*time.Second).Post(ctx, url, params)
+		response, err = g.Client().ContentJson().Timeout(timeout*time.Second).Post(ctx, url, params)
 		defer func(response *gclient.Response) {
 			err = response.Close()
 		}(response)
