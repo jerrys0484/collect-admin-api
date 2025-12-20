@@ -20,10 +20,9 @@ type DispatchSearchRes struct {
 }
 
 type DispatchReq struct {
-	Name  string `p:"name"  v:"required#Name can not empty"`
-	Rules string `p:"rules"  v:"required#Rules can not empty"`
-	Type  int    `p:"type"`
-	Way   int    `p:"way"`
+	Name     string `p:"name"  v:"required#Name can not empty"`
+	Template string `p:"template"`
+	Rules    string `p:"rules"  v:"required#Rules can not empty"`
 }
 
 type DispatchAddReq struct {

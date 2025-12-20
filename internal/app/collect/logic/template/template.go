@@ -15,19 +15,19 @@ import (
 )
 
 func init() {
-	service.RegisterDispatch(New())
+	service.RegisterTemplate(New())
 }
 
-func New() *sDispatch {
-	return &sDispatch{}
+func New() *sTemplate {
+	return &sTemplate{}
 }
 
-type sDispatch struct{}
+type sTemplate struct{}
 
-func (s *sDispatch) List(ctx context.Context, req *collet.DispatchSearchReq) (res *collet.DispatchSearchRes, err error) {
-	res = new(collet.DispatchSearchRes)
+func (s *sTemplate) List(ctx context.Context, req *collet.TemplateSearchReq) (res *collet.TemplateSearchRes, err error) {
+	res = new(collet.TemplateSearchRes)
 	err = g.Try(ctx, func(ctx context.Context) {
-		m := dao.Dispatch.Ctx(ctx)
+		m := dao.Template.Ctx(ctx)
 		if req != nil {
 			if req.Name != "" {
 				m = m.Where("name like ?", "%"+req.Name+"%")
@@ -48,15 +48,15 @@ func (s *sDispatch) List(ctx context.Context, req *collet.DispatchSearchReq) (re
 	return
 }
 
-func (s *sDispatch) Add(ctx context.Context, req *collet.DispatchAddReq) (err error) {
+func (s *sTemplate) Add(ctx context.Context, req *collet.TemplateAddReq) (err error) {
 	err = g.Try(ctx, func(ctx context.Context) {
 		liberr.ErrIsNil(ctx, err)
 		uid, _ := uuid.NewUUID()
-		_, err = dao.Dispatch.Ctx(ctx).Insert(do.Dispatch{
+		_, err = dao.Template.Ctx(ctx).Insert(do.Template{
 			Uuid:       uid.String(),
 			Name:       req.Name,
-			Template:   req.Template,
-			Rules:      req.Rules,
+			Vars:       req.Vars,
+			Data:       req.Data,
 			CreateTime: time.Now().UTC().Unix(),
 		})
 		liberr.ErrIsNil(ctx, err, "Add Failed")
@@ -64,39 +64,32 @@ func (s *sDispatch) Add(ctx context.Context, req *collet.DispatchAddReq) (err er
 	return
 }
 
-func (s *sDispatch) Get(ctx context.Context, uuid string) (res *collet.DispatchGetRes, err error) {
-	res = new(collet.DispatchGetRes)
+func (s *sTemplate) Get(ctx context.Context, uuid string) (res *collet.TemplateGetRes, err error) {
+	res = new(collet.TemplateGetRes)
 	err = g.Try(ctx, func(ctx context.Context) {
-		err = dao.Dispatch.Ctx(ctx).Where("uuid = ?", uuid).Scan(&res.Data)
+		err = dao.Template.Ctx(ctx).Where("uuid = ?", uuid).Scan(&res.Data)
 		liberr.ErrIsNil(ctx, err, "Get Failed")
 	})
 	return
 }
 
-func (s *sDispatch) Edit(ctx context.Context, req *collet.DispatchEditReq) (err error) {
+func (s *sTemplate) Edit(ctx context.Context, req *collet.TemplateEditReq) (err error) {
 	err = g.Try(ctx, func(ctx context.Context) {
 		liberr.ErrIsNil(ctx, err)
-		var res = do.Dispatch{
+		_, err = dao.Template.Ctx(ctx).Where("uuid = ?", req.Uuid).Update(do.Template{
+			Name:       req.Name,
+			Vars:       req.Vars,
+			Data:       req.Data,
 			UpdateTime: time.Now().UTC().Unix(),
-		}
-		if req.Name != "" {
-			res.Name = req.Name
-		}
-		if req.Template != "" {
-			res.Template = req.Template
-		}
-		if req.Rules != "" {
-			res.Rules = req.Rules
-		}
-		_, err = dao.Dispatch.Ctx(ctx).Where("uuid = ?", req.Uuid).Update(res)
+		})
 		liberr.ErrIsNil(ctx, err, "Edit Failed")
 	})
 	return
 }
 
-func (s *sDispatch) Delete(ctx context.Context, uuids []string) (err error) {
+func (s *sTemplate) Delete(ctx context.Context, uuids []string) (err error) {
 	err = g.Try(ctx, func(ctx context.Context) {
-		_, err = dao.Dispatch.Ctx(ctx).Delete(dao.Dispatch.Columns().Uuid+" in (?)", uuids)
+		_, err = dao.Template.Ctx(ctx).Delete(dao.Template.Columns().Uuid+" in (?)", uuids)
 		liberr.ErrIsNil(ctx, err, "Delete Failed")
 	})
 	return

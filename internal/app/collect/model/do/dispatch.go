@@ -14,8 +14,7 @@ type Dispatch struct {
 	Id         any // ID
 	Uuid       any // 标识
 	Name       any // 名称
-	Type       any // 类型
-	Way        any // 方式
+	Template   any // 模板标识
 	Rules      any // 规则(json)
 	CreateTime any // 创建时间
 	UpdateTime any // 更新时间

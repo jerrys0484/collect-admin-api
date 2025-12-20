@@ -22,8 +22,6 @@ type StepsSearchRes struct {
 type StepsAdd struct {
 	Name     string `p:"name"  v:"required#Name can not empty"`
 	Type     string `p:"type"  v:"required#Type can not empty"`
-	Data     string `p:"data"`
-	Vars     string `p:"vars"`
 	Request  string `p:"request"`
 	Response string `p:"response"`
 }
@@ -49,8 +47,6 @@ type StepsEdit struct {
 	Uuid     string `p:"uuid" v:"required#Uuid can not empty"`
 	Name     string `p:"name"`
 	Type     string `p:"type"`
-	Data     string `p:"data"`
-	Vars     string `p:"vars"`
 	Request  string `p:"request"`
 	Response string `p:"response"`
 }

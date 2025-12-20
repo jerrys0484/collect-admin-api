@@ -10,8 +10,7 @@ type Steps struct {
 	Uuid       string `json:"uuid"       orm:"uuid"        description:"标识"`
 	Name       string `json:"name"       orm:"name"        description:"名称"`
 	Type       string `json:"type"       orm:"type"        description:"类型"`
-	Data       string `json:"data"       orm:"data"        description:"数据模板(json)"`
-	Vars       string `json:"vars"       orm:"vars"        description:"变量模板(json)"`
+	Template   string `json:"template"   orm:"template"    description:"模板标识"`
 	Request    string `json:"request"    orm:"request"     description:"请求参数(json)"`
 	Response   string `json:"response"   orm:"response"    description:"响应参数配置(json)"`
 	CreateTime uint   `json:"createTime" orm:"create_time" description:"创建时间"`
