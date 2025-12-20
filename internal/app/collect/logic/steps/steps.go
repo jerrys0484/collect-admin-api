@@ -58,6 +58,7 @@ func (s *sSteps) Add(ctx context.Context, req *collet.StepsAddReq) (err error) {
 			Uuid:       uid.String(),
 			Name:       req.Name,
 			Type:       req.Type,
+			Template:   req.Template,
 			Request:    req.Request,
 			Response:   req.Response,
 			CreateTime: time.Now().UTC().Unix(),
@@ -87,6 +88,9 @@ func (s *sSteps) Edit(ctx context.Context, req *collet.StepsEditReq) (err error)
 		}
 		if req.Type != "" {
 			res.Type = req.Type
+		}
+		if req.Template != "" {
+			res.Template = req.Template
 		}
 		if req.Request != "" {
 			res.Request = req.Request
